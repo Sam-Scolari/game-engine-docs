@@ -71,7 +71,7 @@ const config = {
             label: "Docs",
           },
           {
-            href: "https://github.com/Sam-Scolari/game-engine-docs",
+            href: "https://github.com/Sam-Scolari/game-engine",
             label: "GitHub",
             position: "right",
           },

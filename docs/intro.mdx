@@ -1,0 +1,66 @@
+---
+sidebar_position: 1
+---
+
+# Intro
+
+I created this game engine when I needed a solid foundation for some games I wanted to include on my personal portfolio.
+
+You can see the game engine in action [here](https://samscolari.me)
+
+You can learn more about the creation process and my motivations for creating this game engine here
+
+## Getting Started
+
+Setting up a basic game is only a few lines, this creates us a simple game with a black background.
+
+```typescript
+import Game, { Scene } from "@sam-scolari/game-engine";
+
+const canvas = document.getElementById("canvas");
+
+const game = new Game(canvas);
+
+const scene = new Scene();
+scene.background = "black";
+
+game.load(scene);
+game.start();
+```
+
+import Pong1 from "../src/example/Pong1";
+
+<Pong1 />
+
+We can then import the type of GameObject we want and set a few properties.
+
+import Pong2 from "../src/example/Pong2";
+
+<Pong2 />
+
+```typescript
+import { Circle } from "@sam-scolari/game-engine";
+
+const ball = new Circle();
+ball.position = { x: canvas.width / 2, y: canvas.height / 2 };
+ball.size = { width: 8, height: 8 };
+ball.fill = "white";
+
+scene.add(ball);
+```
+
+Now to add basic movement we can define a custom onUpdate function.
+
+```typescript
+ball.onUpdate = (inputs, deltaTime) => {
+  if (inputs["a"]) {
+    ball.position.x -= 10 * deltaTime;
+  }
+
+  if (inputs["d"]) {
+    ball.position.x += 10 * deltaTime;
+  }
+};
+```
+
+With just those few lines of code we have now successfully added a white ball the to center of the canvas and can move it left and right. It's important to remember to multiply the movement by deltaTime so the game plays the same across any refresh rate.
