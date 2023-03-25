@@ -28,39 +28,118 @@ game.load(scene);
 game.start();
 ```
 
-import Pong1 from "../src/example/Pong1";
+import Game1 from "../src/example/Game1";
 
-<Pong1 />
+<Game1 />
 
 We can then import the type of GameObject we want and set a few properties.
 
-import Pong2 from "../src/example/Pong2";
-
-<Pong2 />
-
 ```typescript
-import { Circle } from "@sam-scolari/game-engine";
+import { Box } from "@sam-scolari/game-engine";
 
-const ball = new Circle();
-ball.position = { x: canvas.width / 2, y: canvas.height / 2 };
-ball.size = { width: 8, height: 8 };
-ball.fill = "white";
+const box = new Box();
+box.size = { width: 60, height: 60 };
+box.position = {
+  x: canvas.width / 2 - box.size.width / 2,
+  y: canvas.height / 2 - box.size.height / 2,
+};
+box.fill = "white";
 
-scene.add(ball);
+scene.add(box);
 ```
 
-Now to add basic movement we can define a custom onUpdate function.
+import Game2 from "../src/example/Game2";
+
+<Game2 />
+
+Now to add basic movement we can give the box a Rigidbody, define a custom onUpdate function, and apply a force based on the key that was pressed.
 
 ```typescript
-ball.onUpdate = (inputs, deltaTime) => {
+box.physics = new Rigidbody(box);
+box.physics.gravity = 0;
+
+box.onUpdate = (inputs) => {
   if (inputs["a"]) {
-    ball.position.x -= 10 * deltaTime;
+    box.physics.addForce(5, -(Math.PI / 2));
   }
 
   if (inputs["d"]) {
-    ball.position.x += 10 * deltaTime;
+    box.physics.addForce(5, Math.PI / 2);
+  }
+
+  if (inputs["w"]) {
+    box.physics.addForce(5, 0);
+  }
+
+  if (inputs["s"]) {
+    box.physics.addForce(5, Math.PI);
   }
 };
 ```
 
-With just those few lines of code we have now successfully added a white ball the to center of the canvas and can move it left and right. It's important to remember to multiply the movement by deltaTime so the game plays the same across any refresh rate.
+import Game3 from "../src/example/Game3";
+
+<Game3 />
+
+There is one problem with this, the box will continue to move off screen where it is not visible to the player. Lets utilize a built in module to create the WarpAround effect seen in games like Asteroids. To use WarpAround first import it then call it in the box's onUpdate function.
+
+```typescript
+import { WarpAround } from "@sam-scolari/game-engine";
+
+box.onUpdate = (inputs) => {
+  WarpAround(box, canvas);
+
+  if (inputs["a"]) {
+    box.physics.addForce(5, -(Math.PI / 2));
+  }
+
+  if (inputs["d"]) {
+    box.physics.addForce(5, Math.PI / 2);
+  }
+
+  if (inputs["w"]) {
+    box.physics.addForce(5, 0);
+  }
+
+  if (inputs["s"]) {
+    box.physics.addForce(5, Math.PI);
+  }
+};
+```
+
+import Game4 from "../src/example/Game4";
+
+<Game4 />
+
+Lets start adding some collisions to the game. We will make the objective to collect red boxes which will grow the size of the white box as it collects them and spawn a new box in a random location on the canvas.
+
+```typescript
+function createFood() {
+  const food = new Box();
+  food.size = { width: 20, height: 20 };
+  food.position = {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+  };
+  food.fill = "red";
+
+  food.onUpdate = () => {
+    if (box.collidesWith(food)) {
+      scene.remove(food);
+      box.size.width += 10;
+      box.size.height += 10;
+      createFood();
+    }
+  };
+
+  scene.add(food);
+}
+
+createFood();
+```
+
+import Game5 from "../src/example/Game5";
+
+<Game5 />
+
+And that is how you make a simple game with my game engine. Check out the rest of the docs to learn more about how it works.

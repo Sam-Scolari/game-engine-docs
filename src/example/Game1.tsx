@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import Game from "../game-engine/Game";
 import Scene from "../game-engine/Scene";
 
-export default function Pong1() {
+export default function Game1() {
   useEffect(() => {
-    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    const canvas = document.getElementById("game1") as HTMLCanvasElement;
 
     const game = new Game(canvas);
 
@@ -15,5 +15,5 @@ export default function Pong1() {
     game.start();
   }, []);
 
-  return <canvas id="canvas" style={{ width: "100%", height: "500px" }} />;
+  return <canvas id="game1" style={{ width: "100%", height: "500px" }} />;
 }

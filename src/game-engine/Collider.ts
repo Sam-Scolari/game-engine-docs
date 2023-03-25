@@ -9,8 +9,8 @@ export default class Collider {
     context.beginPath();
 
     context.strokeRect(
-      this.position.x - this.size.width / 2,
-      this.position.y - this.size.height / 2,
+      this.position.x,
+      this.position.y,
       this.size.width,
       this.size.height
     );
@@ -25,18 +25,12 @@ export default class Collider {
 
   isColliding(gameObject: GameObject) {
     return !(
-      this.position.x - this.size.width / 2 >
-        gameObject.collider.position.x -
-          gameObject.size.width / 2 +
-          gameObject.collider.size.width ||
-      this.position.x - this.size.width / 2 + this.size.width <
-        gameObject.collider.position.x - gameObject.size.width / 2 ||
-      this.position.y - this.size.height / 2 >
-        gameObject.collider.position.y -
-          gameObject.size.height / 2 +
-          gameObject.collider.size.height ||
-      this.position.y - this.size.height / 2 + this.size.height <
-        gameObject.collider.position.y - gameObject.size.height / 2
+      this.position.x >
+        gameObject.collider.position.x + gameObject.collider.size.width ||
+      this.position.x + this.size.width < gameObject.collider.position.x ||
+      this.position.y >
+        gameObject.collider.position.y + gameObject.collider.size.height ||
+      this.position.y + this.size.height < gameObject.collider.position.y
     );
   }
 }
